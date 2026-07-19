@@ -85,6 +85,32 @@ button {
   }
 }
 
+/* Botão de som: equalizador a dançar e notas a subir em perspectiva
+   (o wrapper do botão tem perspective, por isso o translateZ/rotateY
+   lê-se como profundidade real). */
+@keyframes barra-eq {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+@keyframes nota-sobe {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotateY(0deg) scale(0.7);
+  }
+  18% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(-16px, -40px, 70px) rotateY(220deg) scale(1.1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
