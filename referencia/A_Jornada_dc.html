@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;background:#FAFAF8;}
+  a{color:#A07830;text-decoration:none;}
+  a:hover{color:#C9A84C;}
+  button{font-family:inherit;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeUpB{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,76,.35)}50%{box-shadow:0 0 0 8px rgba(201,168,76,0)}}
+  @keyframes popIn{from{opacity:0;transform:translateX(-50%) translateY(8px) scale(.97)}to{opacity:1;transform:translateX(-50%) translateY(0) scale(1)}}
+  @keyframes shimmer{to{background-position:200% center}}
+  @keyframes logoIn{from{opacity:0;transform:translateY(16px) scale(.9);filter:blur(3px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+<div data-screen-label="A Jornada" style="position:relative;width:100%;height:100dvh;overflow:hidden;font-family:Inter,sans-serif;background:linear-gradient(#FBF7EF,#F1E7D2);color:#1A1A1A;">
+
+  <!-- CENA 3D -->
+  <x-import component-from-global-scope="luxo-scene" from="./scene3d.js" stage="{{ stage }}" petals="{{ petalsAttr }}" hint-size="100%,60%" style="position:absolute;left:0;top:0;right:0;bottom:min(230px,30dvh);"></x-import>
+
+  <!-- CARTAO + PROGRESSO + MUSICA -->
+  <sc-if value="{{ inJourney }}" hint-placeholder-val="{{ false }}">
+    <button onClick="{{ toggleMusic }}" aria-label="{{ musicAria }}" title="{{ musicAria }}" style="position:absolute;top:calc(14px + env(safe-area-inset-top));right:14px;z-index:30;width:44px;height:44px;border-radius:50%;border:1.5px solid #E8D5A3;background:rgba(255,255,255,.9);backdrop-filter:blur(4px);color:{{ musicColor }};font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 18px rgba(26,26,26,.08);transition:color .3s ease;" style-hover="background:#FFFFFF;">
+      <span style="position:relative;">♪<sc-if value="{{ musicOff }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:-4px;top:45%;width:22px;height:1.5px;background:#A07830;transform:rotate(-38deg);border-radius:2px;"></span></sc-if></span>
+    </button>
+    <div style="position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;gap:14px;padding:0 16px calc(14px + env(safe-area-inset-bottom));">
+      <div style="width:min(100%,400px);background:#FFFFFF;border:1px solid #F1E8D4;border-radius:24px;padding:20px 22px 18px;box-shadow:0 16px 44px rgba(26,26,26,.12);">
+        <div style="animation:{{ cardAnim }};">
+          <div style="font-size:11px;font-weight:600;letter-spacing:.2em;color:#A07830;text-transform:uppercase;">{{ stepLabel }}</div>
+          <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:600;margin-top:6px;line-height:1.2;">{{ stepTitle }}</div>
+          <div style="font-size:14px;line-height:1.6;color:#6B6B6B;margin-top:8px;text-wrap:pretty;">{{ stepText }}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:16px;">
+          <button onClick="{{ prev }}" aria-label="Etapa anterior" style="width:44px;height:44px;border-radius:999px;border:1.5px solid #E8D5A3;background:#FFFFFF;color:#A07830;font-size:17px;cursor:pointer;flex:0 0 auto;" style-hover="background:#FBF7EF;">←</button>
+          <sc-if value="{{ isStep1 }}" hint-placeholder-val="{{ false }}">
+            <a href="{{ linkInstagram }}" target="_blank" rel="noopener" style="flex:1;display:flex;align-items:center;justify-content:center;height:44px;border-radius:999px;border:1.5px solid #E8D5A3;color:#A07830;font-size:14px;font-weight:600;" style-hover="background:#FBF7EF;color:#A07830;">Ver o Instagram</a>
+          </sc-if>
+          <button onClick="{{ next }}" style="flex:1;height:44px;border-radius:999px;border:none;background:#C9A84C;color:#FFFFFF;font-size:15px;font-weight:600;cursor:pointer;box-shadow:0 8px 20px rgba(201,168,76,.35);transition:transform .2s ease;" style-hover="background:#B8973F;transform:translateY(-1px);">{{ nextLabel }}</button>
+        </div>
+      </div>
+      <div style="position:relative;width:min(100%,400px);display:flex;justify-content:space-between;align-items:center;padding:0 6px;">
+        <div style="position:absolute;left:16px;right:16px;top:50%;height:2px;background:#E8D5A3;"></div>
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="9">
+          <button onClick="{{ s.go }}" aria-label="{{ s.aria }}" style="position:relative;width:24px;height:24px;border-radius:50%;border:2px solid {{ s.border }};background:{{ s.bg }};color:{{ s.color }};font-size:11px;font-weight:600;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;animation:{{ s.anim }};transition:background .3s ease,border-color .3s ease;">{{ s.mark }}</button>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- HERO -->
+  <sc-if value="{{ showHero }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Hero" style="position:absolute;inset:0;background:linear-gradient(rgba(251,247,239,.97) 0%,rgba(251,247,239,.86) 36%,rgba(251,247,239,.4) 62%,rgba(251,247,239,.05) 100%);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:max(20px,5dvh) 24px 24px;gap:0;overflow-y:auto;">
+      <img src="uploads/logo.png" alt="Do Luxo à Mesa · by Luxury Events" style="width:min(44vw,180px);max-height:min(22dvh,180px);object-fit:contain;flex:0 1 auto;animation:logoIn 1.2s cubic-bezier(.2,.8,.3,1) both;">
+      <div style="width:40px;height:1px;background:#E8D5A3;margin:min(20px,2.2dvh) 0;animation:fadeUp .8s .25s ease both;"></div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:.24em;color:#A07830;text-transform:uppercase;animation:fadeUp .8s .35s ease both;">Um guia interactivo</div>
+      <h1 style="font-family:'Playfair Display',serif;font-size:clamp(38px,min(10vw,8dvh),72px);font-weight:600;margin:12px 0 0;line-height:1.05;letter-spacing:.01em;animation:fadeUp .9s .45s ease both;">Do sonho<br><span style="background:linear-gradient(90deg,#A07830,#E8D5A3 40%,#C9A84C 55%,#A07830 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 4s linear infinite;">à mesa.</span></h1>
+      <p style="font-size:15px;line-height:1.6;color:#4A4A4A;max-width:340px;margin:min(16px,2dvh) 0 0;text-wrap:pretty;animation:fadeUp .8s .6s ease both;">Como nasce o teu evento, passo a passo — e o que tratamos por ti (tudo).</p>
+      <button onClick="{{ start }}" style="flex:0 0 auto;margin-top:min(26px,3dvh);height:52px;padding:0 34px;border-radius:999px;border:none;background:#C9A84C;color:#FFFFFF;font-size:16px;font-weight:600;cursor:pointer;box-shadow:0 12px 30px rgba(201,168,76,.45);animation:fadeUp .8s .75s ease both;transition:transform .2s ease;" style-hover="background:#B8973F;transform:translateY(-2px);">Começar a jornada →</button>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px 10px;margin-top:min(22px,2.5dvh);font-size:11.5px;font-weight:500;letter-spacing:.06em;color:#4A4A4A;text-shadow:0 1px 6px rgba(251,247,239,.9);animation:fadeUp .8s .9s ease both;">
+        <span>Montagem completa</span><span style="color:#C9A84C;">·</span><span>Estética personalizada</span><span style="color:#C9A84C;">·</span><span>Experiência premium</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- FINAL -->
+  <sc-if value="{{ showFinal }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Final CTA" style="position:absolute;inset:0;background:linear-gradient(rgba(251,247,239,.92) 0%,rgba(251,247,239,.72) 45%,rgba(251,247,239,.55) 75%,rgba(251,247,239,.82) 100%);backdrop-filter:blur(2px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;overflow-y:auto;animation:fadeIn .8s ease both;">
+      <div style="font-size:11px;font-weight:600;letter-spacing:.24em;color:#A07830;text-transform:uppercase;margin-top:auto;animation:fadeUp .7s .2s ease both;">Agora é contigo</div>
+      <h2 style="font-family:'Playfair Display',serif;font-size:clamp(36px,9vw,64px);font-weight:600;margin:14px 0 0;line-height:1.1;animation:fadeUp .8s .35s ease both;">Vamos criar<br><span style="background:linear-gradient(90deg,#A07830,#E8D5A3 40%,#C9A84C 55%,#A07830 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 4s linear infinite;">o teu evento?</span></h2>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:min(32px,4dvh);width:min(100%,340px);animation:fadeUp .8s .55s ease both;">
+        <a href="{{ linkFormulario }}" target="_blank" rel="noopener" style="width:100%;display:flex;align-items:center;justify-content:center;height:54px;border-radius:999px;background:#C9A84C;color:#FFFFFF;font-size:15.5px;font-weight:600;box-shadow:0 12px 30px rgba(201,168,76,.4);transition:transform .2s ease;" style-hover="background:#B8973F;color:#FFFFFF;transform:translateY(-2px);">Preencher o formulário de interesse</a>
+        <a href="{{ linkInstagram }}" target="_blank" rel="noopener" style="width:100%;display:flex;align-items:center;justify-content:center;height:50px;border-radius:999px;border:1.5px solid #E8D5A3;color:#A07830;font-size:14.5px;font-weight:600;background:#FFFFFF;" style-hover="background:#FBF7EF;color:#A07830;">Ver o Instagram</a>
+      </div>
+      <div style="font-size:12.5px;color:#4A4A4A;margin-top:14px;animation:fadeUp .8s .7s ease both;">Sem compromisso — respondemos em breve.</div>
+      <div style="position:relative;display:flex;gap:10px;margin-top:min(24px,3dvh);animation:fadeUp .8s .85s ease both;">
+        <sc-if value="{{ shareOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;bottom:50px;left:50%;transform:translateX(-50%);width:236px;background:#FFFFFF;border:1px solid #F1E8D4;border-radius:18px;box-shadow:0 18px 44px rgba(26,26,26,.16);padding:8px;display:flex;flex-direction:column;gap:2px;animation:popIn .25s ease both;z-index:5;">
+            <button onClick="{{ shareWhatsApp }}" style="display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border:none;border-radius:12px;background:none;font-size:13.5px;font-weight:500;color:#1A1A1A;cursor:pointer;text-align:left;" style-hover="background:#FBF7EF;"><span style="width:8px;height:8px;border-radius:50%;background:#25D366;flex:0 0 auto;"></span>WhatsApp</button>
+            <button onClick="{{ shareInstagram }}" style="display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border:none;border-radius:12px;background:none;font-size:13.5px;font-weight:500;color:#1A1A1A;cursor:pointer;text-align:left;" style-hover="background:#FBF7EF;"><span style="width:8px;height:8px;border-radius:50%;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);flex:0 0 auto;"></span>Instagram <span style="font-size:11px;color:#6B6B6B;">(copia a ligação)</span></button>
+            <button onClick="{{ copyLink }}" style="display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border:none;border-radius:12px;background:none;font-size:13.5px;font-weight:500;color:#1A1A1A;cursor:pointer;text-align:left;" style-hover="background:#FBF7EF;"><span style="width:8px;height:8px;border-radius:50%;background:#C9A84C;flex:0 0 auto;"></span>Copiar ligação</button>
+            <sc-if value="{{ hasNative }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ shareNative }}" style="display:flex;align-items:center;gap:10px;height:42px;padding:0 14px;border:none;border-radius:12px;background:none;font-size:13.5px;font-weight:500;color:#1A1A1A;cursor:pointer;text-align:left;" style-hover="background:#FBF7EF;"><span style="width:8px;height:8px;border-radius:50%;background:#6B6B6B;flex:0 0 auto;"></span>Mais opções…</button>
+            </sc-if>
+          </div>
+        </sc-if>
+        <button onClick="{{ toggleShare }}" style="height:40px;padding:0 20px;border-radius:999px;border:1.5px solid #E8D5A3;background:none;color:#A07830;font-size:12.5px;font-weight:600;letter-spacing:.04em;cursor:pointer;" style-hover="background:#FFFFFF;">⤴ Partilhar</button>
+        <button onClick="{{ restart }}" style="height:40px;padding:0 20px;border-radius:999px;border:1.5px solid #E8D5A3;background:none;color:#A07830;font-size:12.5px;font-weight:600;letter-spacing:.04em;cursor:pointer;" style-hover="background:#FFFFFF;">↻ Começar de novo</button>
+      </div>
+      <div style="font-size:12px;color:#A07830;margin-top:10px;min-height:16px;">{{ toast }}</div>
+      <div style="margin-top:auto;padding-top:min(28px,3dvh);display:flex;flex-direction:column;align-items:center;gap:5px;padding-bottom:env(safe-area-inset-bottom);animation:fadeIn 1s 1s ease both;">
+        <img src="uploads/logo.png" alt="Do Luxo à Mesa" style="width:min(74px,9dvh);height:auto;">
+        <div style="font-size:10.5px;color:#6B6B6B;">Do Luxo à Mesa · by Nádia Schultz</div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;petalas&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Cena&quot;},&quot;linkFormulario&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://celebra-doluxoamesa-teste.netlify.app/interesse&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ligações&quot;},&quot;linkInstagram&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://www.instagram.com/doluxoamesa&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Ligações&quot;}}">
+class Component extends DCLogic {
+  state = { stage: 0, shareOpen: false, toast: "", music: true };
+  DATA = [
+    { t: "Inspira-te", x: "Espreita o nosso Instagram @doluxoamesa e vê eventos reais que criámos. É lá que muitos clientes descobrem o estilo Do Luxo à Mesa." },
+    { t: "Conta-nos o teu sonho", x: "Preenche o formulário de interesse em 2 minutos: o tipo de evento, a data, o local e — se quiseres — imagens de referência do que imaginas. Sem compromisso." },
+    { t: "Falamos contigo", x: "Pouco depois, a equipa entra em contacto por telefone ou WhatsApp para conhecer os detalhes e afinar ideias contigo." },
+    { t: "O teu orçamento", x: "Recebes um orçamento personalizado, linha a linha, para o teu evento e o teu espaço." },
+    { t: "A data é tua", x: "Com o sinal de 50%, a tua data fica reservada em exclusivo. A partir daqui, o evento é connosco." },
+    { t: "Os detalhes que importam", x: "Enviamos-te um formulário simples sobre o teu evento — cores, estilos, horários, tudo o que torna a festa tua. Respondes quando puderes, ao teu ritmo." },
+    { t: "O projecto e o contrato", x: "Criamos o projecto visual do teu evento — a nossa proposta estética, imagem a imagem — e formalizamos tudo num contrato claro, sem letras pequenas." },
+    { t: "Nós tratamos de tudo", x: "No dia, chegamos com tudo preparado, montamos no local e deixamos o espaço pronto a receber. No fim, desmontamos. Não levantas um dedo." },
+    { t: "O grande dia 🥂", x: "Recebes com elegância. Sem preocupações. A única coisa que te pedimos é que aproveites." }
+  ];
+  componentDidMount() {
+    this._acc = 0; this._lock = 0; this._y = null;
+    this._wheel = (e) => {
+      const s = this.state.stage; if (s < 1 || s > 9) return;
+      const now = Date.now(); if (now < this._lock) return;
+      this._acc += e.deltaY;
+      if (this._acc > 80) { this._lock = now + 800; this._acc = 0; this.next(); }
+      else if (this._acc < -80) { this._lock = now + 800; this._acc = 0; this.prev(); }
+    };
+    this._ts = (e) => { this._y = e.touches[0].clientY; };
+    this._te = (e) => {
+      const s = this.state.stage; if (s < 1 || s > 9 || this._y == null) return;
+      const dy = this._y - e.changedTouches[0].clientY;
+      if (dy > 60) this.next(); else if (dy < -60) this.prev();
+      this._y = null;
+    };
+    this._key = (e) => {
+      const s = this.state.stage; if (s < 1 || s > 9) return;
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") this.next();
+      else if (e.key === "ArrowLeft" || e.key === "ArrowUp") this.prev();
+    };
+    try { if (localStorage.getItem("dlam-musica") === "0") this.setState({ music: false }); } catch (e) {}
+    window.addEventListener("wheel", this._wheel, { passive: true });
+    window.addEventListener("touchstart", this._ts, { passive: true });
+    window.addEventListener("touchend", this._te, { passive: true });
+    window.addEventListener("keydown", this._key);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("wheel", this._wheel);
+    window.removeEventListener("touchstart", this._ts);
+    window.removeEventListener("touchend", this._te);
+    window.removeEventListener("keydown", this._key);
+    clearTimeout(this._toastTimer);
+    if (this._musicTimer) clearInterval(this._musicTimer);
+    if (this._ac) { try { this._ac.close(); } catch (e) {} }
+  }
+  _initAudio() {
+    if (this._ac) return;
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ac = this._ac = new AC();
+    if (ac.state === "suspended") ac.resume();
+    const master = this._master = ac.createGain();
+    master.gain.value = 0;
+    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 3200;
+    master.connect(lp).connect(ac.destination);
+    const delay = ac.createDelay(1); delay.delayTime.value = 0.42;
+    const fb = ac.createGain(); fb.gain.value = 0.32;
+    const wet = ac.createGain(); wet.gain.value = 0.25;
+    delay.connect(fb).connect(delay); delay.connect(wet).connect(master);
+    this._delay = delay;
+    // progressão calma: Cmaj7 · Am7 · Fmaj7 · G6 (midi)
+    this._chords = [[48, 52, 55, 59], [45, 48, 52, 55], [41, 45, 48, 52], [43, 47, 50, 55]];
+    this._chordIx = 0;
+    this._nextChord = ac.currentTime + 0.1;
+    this._nextPluck = ac.currentTime + 1.5;
+    const f = (m) => 440 * Math.pow(2, (m - 69) / 12);
+    const pad = (m, t) => {
+      const g = ac.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.045, t + 2.5);
+      g.gain.setValueAtTime(0.045, t + 6);
+      g.gain.linearRampToValueAtTime(0, t + 9);
+      [0, 3].forEach((det) => {
+        const o = ac.createOscillator(); o.type = "triangle";
+        o.frequency.value = f(m); o.detune.value = det;
+        o.connect(g); o.start(t); o.stop(t + 9.2);
+      });
+      g.connect(master);
+    };
+    const pluck = (m, t) => {
+      const g = ac.createGain();
+      g.gain.setValueAtTime(0, t);
+      g.gain.linearRampToValueAtTime(0.05, t + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 1.4);
+      const o = ac.createOscillator(); o.type = "sine"; o.frequency.value = f(m);
+      o.connect(g); g.connect(master); g.connect(delay);
+      o.start(t); o.stop(t + 1.5);
+    };
+    this._musicTimer = setInterval(() => {
+      if (!this.state.music) return;
+      const ct = ac.currentTime;
+      while (this._nextChord < ct + 1.2) {
+        const ch = this._chords[this._chordIx % 4];
+        ch.forEach((m) => pad(m, this._nextChord));
+        this._chordIx++; this._nextChord += 8;
+      }
+      while (this._nextPluck < ct + 1.2) {
+        const ch = this._chords[(this._chordIx + 3) % 4];
+        const m = ch[Math.floor(Math.random() * ch.length)] + (Math.random() < 0.7 ? 24 : 36);
+        pluck(m, this._nextPluck);
+        this._nextPluck += 0.8 + Math.random() * 1.2;
+      }
+    }, 500);
+  }
+  _setMusic(on) {
+    if (!this._ac) return;
+    if (on && this._ac.state === "suspended") this._ac.resume();
+    const g = this._master.gain, ct = this._ac.currentTime;
+    g.cancelScheduledValues(ct);
+    g.setValueAtTime(g.value, ct);
+    g.linearRampToValueAtTime(on ? 1 : 0, ct + (on ? 1.5 : 0.6));
+    if (on) { this._nextChord = Math.max(this._nextChord, ct + 0.1); this._nextPluck = Math.max(this._nextPluck, ct + 1); }
+  }
+  _go(n) {
+    const inJ = n >= 1 && n <= 9;
+    if (inJ && this.state.music) { this._initAudio(); this._setMusic(true); }
+    else this._setMusic(false);
+    this.setState({ stage: n, shareOpen: false });
+  }
+  next() { this._go(Math.min(10, this.state.stage + 1)); }
+  prev() { this._go(Math.max(0, this.state.stage - 1)); }
+  _toast(msg) {
+    this.setState({ toast: msg, shareOpen: false });
+    clearTimeout(this._toastTimer);
+    this._toastTimer = setTimeout(() => this.setState({ toast: "" }), 2600);
+  }
+  _shareText() { return "Descobre como nasce um evento Do Luxo à Mesa, passo a passo: " + location.href; }
+  _copy() { return navigator.clipboard ? navigator.clipboard.writeText(location.href) : Promise.reject(); }
+  renderVals() {
+    const st = this.state.stage;
+    const inJourney = st >= 1 && st <= 9;
+    const step = inJourney ? this.DATA[st - 1] : this.DATA[0];
+    const petalas = this.props.petalas ?? true;
+    const linkInstagram = this.props.linkInstagram ?? "https://www.instagram.com/doluxoamesa";
+    const steps = this.DATA.map((d, i) => {
+      const n = i + 1;
+      const done = st > n, cur = st === n;
+      return {
+        aria: "Etapa " + n + ": " + d.t,
+        go: () => this._go(n),
+        border: done || cur ? "#C9A84C" : "#E8D5A3",
+        bg: done ? "#C9A84C" : "#FFFFFF",
+        color: done ? "#FFFFFF" : cur ? "#C9A84C" : "#D8C592",
+        mark: done ? "✓" : cur ? "●" : "",
+        anim: cur ? "pulse 1.8s ease infinite" : "none"
+      };
+    });
+    return {
+      stage: st,
+      petalsAttr: petalas ? "1" : "0",
+      showHero: st === 0,
+      showFinal: st === 10,
+      inJourney,
+      stepLabel: "Etapa " + st + " de 9",
+      stepTitle: step.t,
+      stepText: step.x,
+      isStep1: st === 1,
+      nextLabel: st === 9 ? "Continuar →" : "Seguinte →",
+      cardAnim: (st % 2 === 0 ? "fadeUp" : "fadeUpB") + " .55s ease both",
+      steps,
+      next: () => this.next(), prev: () => this.prev(),
+      start: () => this._go(1),
+      restart: () => { this._go(0); this.setState({ toast: "" }); },
+      shareOpen: this.state.shareOpen,
+      toast: this.state.toast,
+      hasNative: typeof navigator !== "undefined" && !!navigator.share,
+      musicOff: !this.state.music,
+      musicColor: this.state.music ? "#C9A84C" : "#A8A8A8",
+      musicAria: this.state.music ? "Desligar a música" : "Ligar a música",
+      toggleMusic: () => {
+        const on = !this.state.music;
+        try { localStorage.setItem("dlam-musica", on ? "1" : "0"); } catch (e) {}
+        if (on) { this._initAudio(); this._setMusic(true); } else this._setMusic(false);
+        this.setState({ music: on });
+      },
+      toggleShare: () => this.setState((s) => ({ shareOpen: !s.shareOpen })),
+      shareWhatsApp: () => {
+        window.open("https://wa.me/?text=" + encodeURIComponent(this._shareText()), "_blank", "noopener");
+        this.setState({ shareOpen: false });
+      },
+      shareInstagram: () => {
+        this._copy().then(() => this._toast("Ligação copiada — cola no Instagram ✓")).catch(() => this._toast("Não foi possível copiar"));
+        window.open(linkInstagram, "_blank", "noopener");
+      },
+      copyLink: () => {
+        this._copy().then(() => this._toast("Ligação copiada ✓")).catch(() => this._toast("Não foi possível copiar"));
+      },
+      shareNative: () => {
+        navigator.share({ title: "Do Luxo à Mesa — Do sonho à mesa", text: "Descobre como nasce um evento Do Luxo à Mesa, passo a passo.", url: location.href }).catch(() => {});
+        this.setState({ shareOpen: false });
+      },
+      linkFormulario: this.props.linkFormulario ?? "https://celebra-doluxoamesa-teste.netlify.app/interesse",
+      linkInstagram
+    };
+  }
+}
+</script>
+</body>
+</html>
