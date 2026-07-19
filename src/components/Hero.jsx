@@ -87,7 +87,7 @@ export default function Hero({ aoComecar }) {
           animation: "fadeUp .8s .6s ease both",
         }}
       >
-        Como nasce o teu evento, passo a passo — e o que tratamos por ti
+        Como nasce o seu evento, passo a passo — e o que tratamos por si
         (tudo).
       </p>
       <button

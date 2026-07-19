@@ -59,7 +59,7 @@ export default function Partilha({ aoRecomecar }) {
   };
 
   const textoPartilha = () =>
-    "Descobre como nasce um evento Do Luxo à Mesa, passo a passo: " +
+    "Descubra como nasce um evento Do Luxo à Mesa, passo a passo: " +
     location.href;
 
   const copiar = () =>
@@ -78,7 +78,7 @@ export default function Partilha({ aoRecomecar }) {
 
   const partilharInstagram = () => {
     copiar()
-      .then(() => mostrarAviso("Ligação copiada — cola no Instagram ✓"))
+      .then(() => mostrarAviso("Ligação copiada — cole no Instagram ✓"))
       .catch(() => mostrarAviso("Não foi possível copiar"));
     window.open(LINKS.instagram, "_blank", "noopener");
   };
@@ -93,7 +93,7 @@ export default function Partilha({ aoRecomecar }) {
     navigator
       .share({
         title: "Do Luxo à Mesa — Do sonho à mesa",
-        text: "Descobre como nasce um evento Do Luxo à Mesa, passo a passo.",
+        text: "Descubra como nasce um evento Do Luxo à Mesa, passo a passo.",
         url: location.href,
       })
       .catch(() => {});

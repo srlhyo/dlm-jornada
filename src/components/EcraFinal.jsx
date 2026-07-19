@@ -44,7 +44,7 @@ export default function EcraFinal({ aoRecomecar }) {
           animation: "fadeUp .7s .2s ease both",
         }}
       >
-        Agora é contigo
+        Agora é consigo
       </div>
       <h2
         style={{
@@ -58,7 +58,7 @@ export default function EcraFinal({ aoRecomecar }) {
       >
         Vamos criar
         <br />
-        <span style={estiloDourado}>o teu evento?</span>
+        <span style={estiloDourado}>o seu evento?</span>
       </h2>
       <div
         style={{
