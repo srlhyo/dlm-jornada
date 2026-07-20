@@ -120,6 +120,8 @@ export default function EcraFinal({ aoRecomecar }) {
           fontSize: "12.5px",
           color: "#4A4A4A",
           marginTop: "14px",
+          textShadow:
+            "0 0 8px rgba(251,247,239,1), 0 0 16px rgba(251,247,239,.95), 0 1px 14px rgba(201,168,76,.3)",
           animation: "fadeUp .8s .7s ease both",
         }}
       >
