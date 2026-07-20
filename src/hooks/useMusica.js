@@ -9,10 +9,9 @@ import { useEffect, useRef, useState } from "react";
 // wet 0.25), scheduler por setInterval 500ms com lookahead 1.2s.
 // O AudioContext só nasce no primeiro gesto do utilizador
 // (aoMudarEtapa/alternar são chamados por handlers de eventos).
-// Preferência em localStorage["dlam-musica"] ("0" = desligada).
+// A música começa sempre LIGADA — não se guarda preferência entre
+// visitas, por decisão da marca.
 // ============================================================
-
-const CHAVE_PREFERENCIA = "dlam-musica";
 
 // progressão calma: Cmaj7 · Am7 · Fmaj7 · G6 (midi)
 const ACORDES = [
@@ -23,13 +22,7 @@ const ACORDES = [
 ];
 
 export function useMusica() {
-  const [ligada, setLigada] = useState(() => {
-    try {
-      return localStorage.getItem(CHAVE_PREFERENCIA) !== "0";
-    } catch {
-      return true;
-    }
-  });
+  const [ligada, setLigada] = useState(true);
 
   // Estado do motor de áudio fora do ciclo de render (o scheduler
   // lê "ligada" via ref para não depender de closures antigas).
@@ -172,11 +165,6 @@ export function useMusica() {
 
   const alternar = () => {
     const agoraLigada = !motor.current.ligada;
-    try {
-      localStorage.setItem(CHAVE_PREFERENCIA, agoraLigada ? "1" : "0");
-    } catch {
-      /* armazenamento indisponível */
-    }
     if (agoraLigada) {
       iniciarAudio();
       definirVolume(true);

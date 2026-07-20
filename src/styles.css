@@ -111,6 +111,53 @@ button {
   }
 }
 
+/* Overlay de partilha: pétalas a cair, brilhos, cartão-convite em
+   perspectiva e borda dourada a fluir. */
+@keyframes petala-cai {
+  0% {
+    transform: translate3d(0, -6vh, 0) rotate(0deg);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  88% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate3d(4vw, 104vh, 0) rotate(340deg);
+    opacity: 0;
+  }
+}
+@keyframes brilho-flutua {
+  0%,
+  100% {
+    transform: translateY(6px) scale(0.7);
+    opacity: 0.2;
+  }
+  50% {
+    transform: translateY(-9px) scale(1.15);
+    opacity: 0.95;
+  }
+}
+@keyframes cartao-in {
+  from {
+    opacity: 0;
+    transform: rotateX(16deg) scale(0.82) translateY(30px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0deg) scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+@keyframes borda-flui {
+  to {
+    background-position: 0 0, 300% 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
