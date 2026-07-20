@@ -45,7 +45,7 @@ export const ETAPAS = [
 
 export const LINKS = {
   // TROCAR pelo formulário de PRODUÇÃO antes do lançamento:
-  formulario: "https://celebra-doluxoamesa-teste.netlify.app/interesse",
+  formulario: "https://celebra-doluxoamesa.netlify.app/interesse",
   instagram: "https://www.instagram.com/doluxoamesa",
 };
 
